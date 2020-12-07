@@ -1,4 +1,5 @@
 <template>
+
   <div class="app-main-layout">
       <Navbar  @click="isOpen = !isOpen" />
     <Sidebar v-model="isOpen" />
@@ -23,13 +24,18 @@ import Navbar from '../components/app/Navbar.vue'
 import Sidebar from '../components/app/Sidebar.vue'
 //  import { component } from 'vue/types/umd'
 export default {
-  name: 'Main',
+  name: 'Main', 
   components: {
     Navbar,
     Sidebar
   },
-  data: () => ({
-    isOpen: true
-  })
+  data: () => ({  // свойство
+     isOpen: true
+  }),
+ async mounted(){  //  Метод, который выполнфется после загрузки страницы.
+    if(!Object.keys(this.$store.getters.info).length){
+      await this.$store.dispatch('fetchinfo')
+    }
+  }
 }
 </script>

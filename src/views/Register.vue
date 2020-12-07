@@ -1,48 +1,50 @@
 <template>
-  <form class="card auth-card" @submit.prevent='submitHandler'>
+  <form class="card auth-card" @submit.prevent='submitHandler' :validator="$v.form" :messages="messagesOverride" >
     <div class="card-content">
       <span class="card-title">Домашняя бухгалтерия</span>
+
       <div class="input-field">
-        <input
+        <label> Email </label>
+
+      
+               <input
             id="email"
             type="text"
-            v-model.trim="email"
-            :class="{invalid: ($v.email.$dirty) || !$v.email.required }" 
-             
-        >
-        <!-- /* $v  Это validate */ -->
+         
+            v-model.trim="form.email"
+     
+            >
 
-        <label  for="email">Email</label>
-        <small  v-if=" ($v.email.$dirty) || !$v.email.required " class="helper-text invalid">{{ }}  </small>
+
+        <!-- /* $v  Это validate */ -->
       </div>
     
  <div class="input-field">
+
+    <label> Password </label>
         <input
             id="password"
             type="password"
-            v-model.trim="password"
+            v-model="form.password"
         >
-        <label for="password">Пароль</label>
-        <small class="helper-text invalid">Password</small>
+
+  
+  
       </div>
   <div class="input-field">
+
+       <label> Name </label>
         <input
             id="name"
             type="text"
-            v-model="name"
-            :class="{invalid: $v.name.$dirty && !$v.name.required}"
+            v-model="form.name"
+
         >
-        <label for="name">Имя</label>
-        <small 
-          class="helper-text invalid"
-          v-if="$v.name.$dirty && !$v.name.required"
-        >
-          Введите ваше имя
-        </small>
+ 
       </div>
       <p>
         <label>
-          <input type="checkbox" v-model='agree'  />
+          <input type="checkbox" v-model='form.agree'  />
           <span>С правилами согласен</span>
         </label>
       </p>
@@ -71,31 +73,47 @@ import {email,required,minLength} from  'vuelidate/lib/validators'
  export default{
    name:'register',
    data: ()=> ({
+    form: { 
      email:'',
      password:'',
     name:'',
     agree: false
+    },
+     messagesOverride: {
+        required: "You must fill the {attribute} field to continue",
+        email: "The email must be a genuine email address."
+      }
    }),
    validations: {
+    form: { 
      email: {email,required},
      password: {required,minLength: minLength(6)},
      name:{required},
-    agree:{checked: v=> true}
+     agree:{checked: v=> true},
+    }
    },
    methods: {
-   submitHandler(){
+  async submitHandler(){
 
-     if (this.$v.$invalid){
-       this.$v.$touch() // Покажет поле где ошибка (Активизация валидации)
+     if (this.$v.form.$invalid){
+       this.$v.form.$touch() // Покажет поле где ошибка (Активизация валидации)
+ 
+ 
+       this.$store.commit('setError', 'Ошибка с формой')
        return
      }
-       const formData = {
-        email: this.email,
-        password: this.password,
-        name: this.name
-      }
 
-     console.log(formData)
+       const formData = {
+        email: this.$v.form.email,
+        password: this.$v.form.password,
+        name: this.$v.form.name
+      }
+    try{
+      await this.$store.dispatch('register',formData)
+      this.$router.push('/')
+    } catch(e){ 
+      this.$store.commit('setError',e)
+     }
     //this.$router.push('/')
    } 
    }

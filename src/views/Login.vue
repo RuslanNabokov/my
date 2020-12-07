@@ -71,9 +71,9 @@ import {email,required,minLength} from  'vuelidate/lib/validators'
      await this.$store.dispatch('login',us_data)
      this.$router.push('/') 
     } catch (e){
-       console.log(e)  
+   
+      
     }
-     
 
    } 
    }

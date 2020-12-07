@@ -3,14 +3,21 @@ import Vuelidate from 'vuelidate'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import messagePlugin from '@/utils/message.plugin'
 import dateFilter from '@/filters/date_filter'
+import currencyFilter from '@/filters/currency.filter'
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import 'firebase/database'
 import 'materialize-css/dist/js/materialize'
+
+import Loader from '@/components/app/Loader';
 Vue.config.productionTip = false
 Vue.filter('date',dateFilter)
+Vue.filter('currency',currencyFilter)
+Vue.component('Loader',Loader )
+Vue.use(messagePlugin)
 Vue.use(Vuelidate)  // Добавляем плагин
 // initial  firebase 
 const firebaseConfig = {
@@ -24,7 +31,7 @@ const firebaseConfig = {
   measurementId: "G-K1CX4VXER7"
 };
 firebase.initializeApp(firebaseConfig)
-let app 
+let app;
 
 firebase.auth().onAuthStateChanged(() => {
 // initial  firebase
