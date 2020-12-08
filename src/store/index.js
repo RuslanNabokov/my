@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import auth from './auth'
 import createPersistedState from 'vuex-persistedstate'
 import  info  from './info'
+import category from './category'
 Vue.use(Vuex)
  
 /* eslint-disable no-new */
@@ -14,7 +15,7 @@ const store = new Vuex.Store({
   mutations:{
     setError(state,error){
       // console.log('error')
-      console.log(1)
+      console.log(error)
       state.error  = error
       
     },
@@ -34,7 +35,8 @@ const store = new Vuex.Store({
   },
   modules: {
     auth,
-    info
+    info,
+    category
   },
 })
 

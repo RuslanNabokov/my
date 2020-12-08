@@ -1,41 +1,46 @@
 <template>
+  <div>
+    <Loader v-if="loading" />
+    <div class="app-main-layout" v-else>
+      
+      <Navbar @click="isOpen = !isOpen" />
 
-  <div class="app-main-layout">
-      <Navbar  @click="isOpen = !isOpen" />
-    <Sidebar v-model="isOpen" />
-    <main class="app-content" :class="{fill: !isOpen}">
-      <div class="app-page">
-            
-        <router-view />
+      <Sidebar v-model="isOpen" />
+      
+      <main class="app-content" :class="{full: !isOpen}">
+        <div class="app-page">
+          <router-view />
+        </div>
+      </main>
+
+      <div class="fixed-action-btn">
+        <router-link class="btn-floating btn-large blue" to="/record">
+          <i class="large material-icons">add</i>
+        </router-link>
       </div>
-    </main>
-
-    <div class="fixed-action-btn">
-      <router-link class="btn-floating btn-large blue" to='/record'>
-        <i class="large material-icons">add</i>
-      </router-link>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script>
+import Navbar from '@/components/app/Navbar'
+import Sidebar from '@/components/app/Sidebar'
 
-import Navbar from '../components/app/Navbar.vue'
-import Sidebar from '../components/app/Sidebar.vue'
-//  import { component } from 'vue/types/umd'
 export default {
-  name: 'Main', 
-  components: {
-    Navbar,
-    Sidebar
-  },
-  data: () => ({  // свойство
-     isOpen: true
+  name: 'main-layout',
+  data: () => ({
+    isOpen: true,
+    loading: true
   }),
- async mounted(){  //  Метод, который выполнфется после загрузки страницы.
-    if(!Object.keys(this.$store.getters.info).length){
-      await this.$store.dispatch('fetchinfo')
+  async mounted() {
+    if (!Object.keys(this.$store.getters.info).length) {
+      await this.$store.dispatch('fetchInfo')
     }
+
+    this.loading = false
+  },
+  components: {
+    Navbar, Sidebar
   }
 }
 </script>
